@@ -1,37 +1,20 @@
 import React, { useState, useEffect } from "react";
 import Lineup from "./Lineup";
 import uuid4 from "uuid";
-/* import axios from "axios"; */
-
-/* import dummyLineupsData from "./dummyLineupsData"; */
+import axios from "axios";
 
 export default function LineupGroup() {
-  /*   const lineups = dummyLineupsData.map(lineup => (
-    <Lineup
-      key={uuid4()}
-      id={lineup.lineup_id}
-      players={lineup.players}
-      points={lineup.lineup_points}
-    />
-  )); */
-
-  const [lineups, setLineups] = useState([]);
+  const [lineups, setLineups] = useState({ lineups: [] });
   const [hasError, setError] = useState(false);
 
   const LINEUPS_URL = "http://localhost:5000/lineups";
   async function fetchData() {
-    await fetch(LINEUPS_URL)
-      .then(res => {
-        if (res.ok) {
-          return res.json();
-        } else {
-          throw new Error("Error happened");
-        }
-      })
+    await axios
+      .get(LINEUPS_URL)
       .then(resJSON => {
-        /* console.log(JSON.parse(res).lineups); */
+        console.log(resJSON);
         setLineups(
-          JSON.parse(resJSON).lineups.map(lineup => (
+          JSON.parse(resJSON.data).lineups.map(lineup => (
             <Lineup
               key={uuid4()}
               id={lineup.lineup_id}
@@ -46,20 +29,10 @@ export default function LineupGroup() {
         setError(true);
       });
   }
+
   useEffect(() => {
     fetchData();
   }, []);
-  /* axios.get(LINEUPS_URL).then(res => {useState({
-    res.data.lineups.map(lineup => (
-      <Lineup
-        key={uuid4()}
-        id={lineup.lineup_id}
-        players={lineup.players}
-        points={lineup.lineup_points}
-      />
-    ));
-    return {lineups};
-  })}); */
 
   const rows = [];
   const LINEUPS_PER_ROW = 3;
