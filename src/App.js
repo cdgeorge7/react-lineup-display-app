@@ -10,7 +10,7 @@ function App() {
       <Header />
       <div className="container">
         <AppOptions />
-        <LineupGroup refresh={false} refreshRate={5000} />
+        <LineupGroup refresh={true} refreshRate={5000} />
       </div>
     </div>
   );
