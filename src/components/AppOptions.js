@@ -1,9 +1,13 @@
 import React from "react";
+import Refresh from "./Refresh";
+import PlayerFilter from "./PlayerFilter";
+import "../styles/style.css";
 
 export default function AppOptions() {
   return (
-    <div>
-      <div>THIS IS WHERE THE OPTIONS FOR THE APP WILL GO</div>
+    <div className="parent">
+      <Refresh />
+      <PlayerFilter />
     </div>
   );
 }

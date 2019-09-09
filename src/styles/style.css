@@ -8,3 +8,7 @@
 .pb {
   padding: 5px;
 }
+
+.parent div {
+  display: inline;
+}

@@ -3,16 +3,18 @@ import Lineup from "./Lineup";
 import uuid4 from "uuid";
 import axios from "axios";
 
-export default function LineupGroup() {
+export default function LineupGroup(props) {
   const [lineups, setLineups] = useState({ lineups: [] });
   const [hasError, setError] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [errStr, setErrstr] = useState(null);
 
   const LINEUPS_URL = "http://localhost:5000/lineups";
   async function fetchData() {
     await axios
       .get(LINEUPS_URL)
       .then(resJSON => {
-        console.log(resJSON);
+        /* console.log("fetched"); */
         setLineups(
           JSON.parse(resJSON.data).lineups.map(lineup => (
             <Lineup
@@ -23,9 +25,14 @@ export default function LineupGroup() {
             />
           ))
         );
+        setLoading(false);
+        if (props.refresh) {
+          setTimeout(fetchData, props.refreshRate);
+        }
       })
       .catch(err => {
         console.log(err);
+        setErrstr(err);
         setError(true);
       });
   }
@@ -56,5 +63,11 @@ export default function LineupGroup() {
       );
     }
   }
-  return hasError ? <div>error</div> : <div>{rows}</div>;
+  return hasError ? (
+    <div>error {String(errStr)}</div>
+  ) : loading ? (
+    <div>Loading...</div>
+  ) : (
+    <div>{rows}</div>
+  );
 }
