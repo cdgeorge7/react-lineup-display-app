@@ -1,15 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import PlayerRow from "./PlayerRow";
 import uuid4 from "uuid";
 import axios from "axios";
 import "../styles/style.css";
 
 export default function Lineup(props) {
+  const DELAY = 100;
   const [points, setPoints] = useState(props.points);
+  const [delay, setDelay] = useState(DELAY);
+  let savedPoints = useRef(props.points);
 
   const LINEUP_URL = "http://localhost:5000/lineups?lineup_id=" + props.id;
 
-  const updatePoints = pointDiff => {
+  /*   const updatePoints = pointDiff => {
     let pointIntVal = Math.trunc(pointDiff);
     let remainingDecimal = pointDiff - pointIntVal;
     if (pointIntVal > 0) {
@@ -27,7 +30,7 @@ export default function Lineup(props) {
     if (remainingDecimal !== 0) {
       setPoints(points + remainingDecimal);
     }
-  };
+  }; */
 
   async function checkLineup() {
     await axios
@@ -37,9 +40,11 @@ export default function Lineup(props) {
         console.log(JSON.parse(resJSON.data));
         const new_points = JSON.parse(resJSON.data).lineup_points;
         console.log("old points: " + points);
+        savedPoints.current = new_points;
         if (new_points !== points) {
-          setInterval(updatePoints(new_points - points), 1000);
+          setDelay(DELAY);
         }
+        //setPoints(new_points);
         setTimeout(checkLineup, 10000);
       })
       .catch(err => {
@@ -52,6 +57,25 @@ export default function Lineup(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useInterval(() => {
+    console.log(savedPoints.current);
+    if (points === savedPoints.current) {
+      setDelay(null);
+      return;
+    }
+    setPoints(points + 1);
+    console.log("interval points: " + points);
+    console.log(delay);
+  }, delay);
+
+  return (
+    <div>
+      <h1>{points}</h1>
+    </div>
+  );
+
+  //main return
+  /*
   return (
     <div className="col-md-4 pb">
       <button
@@ -87,4 +111,23 @@ export default function Lineup(props) {
       </div>
     </div>
   );
+  */
+}
+
+function useInterval(callback, delay) {
+  const savedCallback = useRef();
+
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+
+  useEffect(() => {
+    function tick() {
+      savedCallback.current();
+    }
+    if (delay !== null) {
+      let id = setInterval(tick, delay);
+      return () => clearInterval(id);
+    }
+  }, [delay]);
 }
