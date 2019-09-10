@@ -5,7 +5,13 @@ export default function Refresh() {
     <div>
       <span>Refresh data</span>
       <br />
-      <input type="radio" name="five_seconds" value="0" checked="checked" /> 0
+      <input
+        type="radio"
+        name="five_seconds"
+        value="0"
+        defaultChecked="checked"
+      />{" "}
+      0
       <br />
       <input type="radio" name="five_seconds" value="10" /> 10
       <br />

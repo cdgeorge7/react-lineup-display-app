@@ -3,7 +3,7 @@ import Lineup from "./Lineup";
 import uuid4 from "uuid";
 import axios from "axios";
 
-export default function LineupGroup(props) {
+export default function LineupGroups(props) {
   const [lineups, setLineups] = useState({ lineups: [] });
   const [hasError, setError] = useState(false);
   const [loading, setLoading] = useState(true);

@@ -1,8 +1,8 @@
 import React from "react";
 import Header from "./components/Header";
 import AppOptions from "./components/AppOptions";
-import LineupGroup from "./components/LineupGroup";
 import "./App.css";
+import LineupGroups from "./components/LineupGroup";
 
 function App() {
   return (
@@ -10,7 +10,7 @@ function App() {
       <Header />
       <div className="container">
         <AppOptions />
-        <LineupGroup refresh={true} refreshRate={5000} />
+        <LineupGroups refresh={false} refreshRate={10} />
       </div>
     </div>
   );
